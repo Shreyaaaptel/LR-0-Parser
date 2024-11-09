@@ -1,0 +1,76 @@
+Grammar Productions:
+------------------------------------------------------------
+0. S' -> S
+1. S -> a S b
+2. S -> c
+
+
+Parsing of input string: aacb
+------------------------------------------------------------
+Stack                    Input               Action         
+------------------------------------------------------------
+$0                       aacb$               shift 2        
+$0a2                     acb$                shift 2        
+$0a2a2                   cb$                 shift 3        
+$0a2a2c3                 b$                  reduce 2       
+$0a2a2S4                 b$                  shift 5        
+$0a2a2S4b5               $                   reduce 1       
+$0a2S4                   $                   ERROR          
+Error Recovery: Syntax error at position 4, unexpected token: $
+Reset to initial state
+Error: Unexpected end of input
+
+Parsing of input string: ab
+------------------------------------------------------------
+Stack                    Input               Action         
+------------------------------------------------------------
+$0                       ab$                 shift 2        
+$0a2                     b$                  ERROR          
+Error Recovery: Syntax error at position 1, unexpected token: b
+Recovered by synchronizing at 'b'
+Unable to recover from error
+
+Parsing of input string: accb
+------------------------------------------------------------
+Stack                    Input               Action         
+------------------------------------------------------------
+$0                       accb$               shift 2        
+$0a2                     ccb$                shift 3        
+$0a2c3                   cb$                 reduce 2       
+$0a2S4                   cb$                 ERROR          
+Error Recovery: Syntax error at position 2, unexpected token: c
+Skipped to token 'b'
+$0a2S4                   b$                  shift 5        
+$0a2S4b5                 $                   reduce 1       
+$0S1                     $                   accept         
+Input accepted!
+
+Parsing of input string: aacbb
+------------------------------------------------------------
+Stack                    Input               Action         
+------------------------------------------------------------
+$0                       aacbb$              shift 2        
+$0a2                     acbb$               shift 2        
+$0a2a2                   cbb$                shift 3        
+$0a2a2c3                 bb$                 reduce 2       
+$0a2a2S4                 bb$                 shift 5        
+$0a2a2S4b5               b$                  reduce 1       
+$0a2S4                   b$                  shift 5        
+$0a2S4b5                 $                   reduce 1       
+$0S1                     $                   accept         
+Input accepted!
+
+Parsing Summary
+============================================================
+Input: aacb
+Result: Rejected
+------------------------------------------------------------
+Input: ab
+Result: Rejected
+------------------------------------------------------------
+Input: accb
+Result: Accepted
+------------------------------------------------------------
+Input: aacbb
+Result: Accepted
+------------------------------------------------------------
